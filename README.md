@@ -21,9 +21,9 @@ This build prioritises **zero GPU licensing cost** by running Ubuntu Server bare
 ## Software Stack
 
 - **OS**: Ubuntu Server 24.04 LTS
-- **GPU drivers**: NVIDIA 535.x (supports Maxwell sm_52 and Pascal)
-- **Compute**: CUDA Toolkit 12.x
-- **ML runtime**: PyTorch 2.1 with CUDA 12.1
+- **GPU drivers**: NVIDIA 535.x (supports Maxwell sm_50/sm_52)
+- **Compute**: CUDA Toolkit 12.6 (pinned — Maxwell not supported in CUDA 13+)
+- **ML runtime**: PyTorch cu126 build
 - **LLM serving**: Ollama
 - **Development**: JupyterLab + Python virtual environments
 
@@ -40,9 +40,13 @@ Follow the documents in order:
 
 ## Examples
 
-| Example | Description |
-|---------|-------------|
-| [examples/device_query](examples/device_query) | CUDA device enumeration — verifies GPU detection and prints compute capability, VRAM, and ECC status |
+| Example | Language | Description |
+|---------|----------|-------------|
+| [examples/device_query](examples/device_query) | CUDA C | GPU enumeration — verifies detection, compute capability, VRAM, and ECC status |
+| [examples/cuda_bench](examples/cuda_bench) | CUDA C | Memory bandwidth (GB/s) and GEMM throughput (GFLOPS) per GPU; writes timestamped JSON |
+| [examples/torch_bench](examples/torch_bench) | Python | PyTorch matmul TFLOPS, Conv2d images/sec, and memory bandwidth per GPU; writes timestamped JSON |
+
+The benchmark examples are designed to be run before and after adding the Tesla M10 to produce comparable JSON results.
 
 ## Architecture Overview
 
