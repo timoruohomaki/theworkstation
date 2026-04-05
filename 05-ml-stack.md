@@ -32,7 +32,7 @@ pip install --upgrade pip wheel setuptools
 > ```bash
 > source ~/envs/ml/bin/activate
 > ```
-> Ollama is the only exception — it installs as a system service and does not use the venv.
+> Ollama and Open WebUI are the only exceptions — they are system-level and do not use the venv.
 
 ---
 
@@ -127,7 +127,7 @@ Access JupyterLab from any machine on your LAN at `http://WORKSTATION_IP:8888`.
 
 ## Ollama (LLM Serving)
 
-Ollama is installed as a system-level service and does **not** use the `ml` venv. It compiles against the system CUDA toolkit at install time, so it works correctly as long as CUDA 12.6 is installed. Run the following from a normal shell (venv active or not):
+Ollama is a system-level binary installed to `/usr/local/bin` and does **not** interact with the `ml` venv in any way. The venv only affects `python3`, `pip`, and executables installed within it — `ollama` is resolved from the system path regardless of whether the venv is active. There is no need to call `deactivate` before using Ollama.
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
@@ -157,7 +157,7 @@ The Ollama API is available at `http://WORKSTATION_IP:11434` for use with Open W
 
 ## Optional: Open WebUI (Chat Interface)
 
-Open WebUI runs in Docker and does not use the `ml` venv. Run from a normal shell:
+Open WebUI runs in Docker and does not use the `ml` venv. No need to call `deactivate` before running Docker commands.
 
 ```bash
 docker run -d \
