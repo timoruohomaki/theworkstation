@@ -72,13 +72,42 @@ The GT1030 drives the display but the server runs headless for day-to-day use. I
 sudo apt install -y xorg
 ```
 
-Create a minimal X config that assigns display to the GT1030:
+Generate a base config:
 
 ```bash
 sudo nvidia-xconfig --no-composite --allow-empty-initial-configuration
 ```
 
-This generates `/etc/X11/xorg.conf`. Verify the `BusID` matches the GT1030 PCI address from `lspci | grep -i nvidia`.
+This creates `/etc/X11/xorg.conf` but typically without a `BusID` entry. Add it manually so X11 binds to the GT1030 specifically, not whichever GPU it enumerates first.
+
+Find the GT1030 PCI address:
+
+```bash
+lspci | grep -i nvidia
+```
+
+Example output:
+```
+01:00.0 VGA compatible controller: NVIDIA Corporation GP108 [GeForce GT 1030]
+02:00.0 3D controller: NVIDIA Corporation GM204GL [Tesla M10]
+```
+
+The GT1030 address here is `01:00.0`. Convert it to xorg format (`PCI:1:0:0`) and insert it into the `Device` section of `/etc/X11/xorg.conf`:
+
+```bash
+sudo nano /etc/X11/xorg.conf
+```
+
+```
+Section "Device"
+    Identifier     "Device0"
+    Driver         "nvidia"
+    VendorName     "NVIDIA Corporation"
+    BusID          "PCI:1:0:0"
+EndSection
+```
+
+Replace `PCI:1:0:0` with the value matching your GT1030's address — the format converts `BB:DD.F` from `lspci` to `PCI:BB:DD:F`.
 
 ---
 
