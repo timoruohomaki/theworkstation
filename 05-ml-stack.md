@@ -1,5 +1,17 @@
 # 05 — ML Stack
 
+## Compatibility Notice
+
+> ⚠️ **Maxwell version ceiling**: NVIDIA dropped Maxwell (sm_50, sm_52) from CUDA 13.0, and PyTorch dropped it from builds targeting CUDA 12.8+. The versions pinned below are the **tested ceiling** for this hardware. Do not upgrade CUDA or PyTorch beyond these pins without verifying Maxwell support first.
+
+| Component | Pinned version | Reason |
+|-----------|---------------|--------|
+| CUDA Toolkit | 12.6 | Last with full Maxwell library support |
+| PyTorch | 2.8 + cu126 | Last build series with sm_50/sm_52 wheels |
+| Ollama | latest | Builds against system CUDA; fine with 12.6 |
+
+---
+
 ## Python Environment
 
 Ubuntu 24.04 ships Python 3.12. Use virtual environments to isolate project dependencies.
@@ -16,20 +28,18 @@ source ~/envs/ml/bin/activate
 pip install --upgrade pip wheel setuptools
 ```
 
-Add activation to `.bashrc` or activate per session.
-
 ---
 
-## PyTorch with CUDA
+## PyTorch with CUDA 12.6
 
-Install the PyTorch build that matches CUDA 12.1 and includes sm_52 (Maxwell) support:
+Install the PyTorch build targeting CUDA 12.6, which still includes sm_50 and sm_52 wheels:
 
 ```bash
-pip install torch==2.1.2 torchvision==0.16.2 torchaudio==2.1.2 \
-    --index-url https://download.pytorch.org/whl/cu121
+pip install torch torchvision torchaudio \
+    --index-url https://download.pytorch.org/whl/cu126
 ```
 
-> **Version pin**: PyTorch 2.1.x is the last confirmed release with sm_52 (Maxwell) in the pre-built wheels. Newer versions may require building from source. Check [https://pytorch.org/get-started/previous-versions/](https://pytorch.org/get-started/previous-versions/) before upgrading.
+> **Do not use cu128 or later index URLs** — Maxwell support was removed from those builds.
 
 Verify:
 
@@ -38,11 +48,13 @@ python3 -c "
 import torch
 print('PyTorch:', torch.__version__)
 print('CUDA available:', torch.cuda.is_available())
-print('Device count:', torch.cuda.device_count())
+print('Architectures:', torch.cuda.get_arch_list())
 for i in range(torch.cuda.device_count()):
     print(f'  GPU {i}:', torch.cuda.get_device_name(i))
 "
 ```
+
+The `get_arch_list()` output must include `sm_52` — if it does not, the installed wheel does not support the M10.
 
 ---
 
@@ -101,7 +113,7 @@ Access JupyterLab from any machine on your LAN at `http://WORKSTATION_IP:8888`.
 
 ## Ollama (LLM Serving)
 
-Ollama uses llama.cpp as its backend and auto-detects CUDA GPUs.
+Ollama uses llama.cpp as its backend and auto-detects CUDA GPUs. It compiles against the system CUDA toolkit at install time, so it works correctly as long as CUDA 12.6 is installed.
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
@@ -110,22 +122,19 @@ curl -fsSL https://ollama.com/install.sh | sh
 Ollama installs as a systemd service automatically. Verify it sees the GPU:
 
 ```bash
-ollama serve &      # if not already running as service
-ollama run llama3.2 # pulls and runs a 3B model as a smoke test
+ollama run llama3.2   # pulls and runs a 3B model as a smoke test
 ```
 
-Check which GPU Ollama is using:
-
 ```bash
-nvidia-smi dmon -s u    # watch GPU utilisation while a model runs
+nvidia-smi dmon -s u  # watch GPU utilisation while a model runs
 ```
 
 ### Useful Ollama Commands
 
 ```bash
-ollama list             # list downloaded models
-ollama pull mistral     # download a model
-ollama rm mistral       # remove a model
+ollama list           # list downloaded models
+ollama pull mistral   # download a model
+ollama rm mistral     # remove a model
 ```
 
 The Ollama API is available at `http://WORKSTATION_IP:11434` for use with Open WebUI or any OpenAI-compatible client.
