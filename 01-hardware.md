@@ -10,7 +10,7 @@ The stock HP Z240 400 W PSU is **not sufficient** for the Tesla M10 (225 W TDP).
 
 The HP Z240 Tower uses a **standard 24-pin ATX motherboard connector**, so off-the-shelf ATX PSUs fit without adapters. Verified compatible form factor: standard ATX. Recommended brands with good Z240 reports: Seasonic, be quiet!, Corsair.
 
-The Tesla M10 requires **two 8-pin PCIe power connectors**. Confirm your new PSU has these before purchasing.
+The Tesla M10 requires **one 8-pin PCIe power connector**. Confirm your new PSU has this before purchasing.
 
 ### PSU Budget Checklist
 
