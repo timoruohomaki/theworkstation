@@ -16,7 +16,7 @@ This build prioritises **zero GPU licensing cost** by running Ubuntu Server bare
 | Storage | Kingston 1 TB NVMe | M.2 slot on Z240 motherboard |
 | Display GPU | Asus GT1030 | Headless display adapter; frees M10 for compute |
 | Compute GPU | NVIDIA Tesla M10 | 4× Maxwell GPUs, 32 GB GDDR5, 2 560 CUDA cores |
-| PSU | 750 W ATX (upgraded) | Stock 400 W is insufficient for M10 (225 W TDP) |
+| PSU | Gigabyte Aorus Elite P1000W (GP-AE1000PM) | 80+ Platinum, fully modular, ATX 3.1; stock 400 W insufficient for M10 |
 
 ## Software Stack
 
