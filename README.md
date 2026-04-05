@@ -31,12 +31,12 @@ This build prioritises **zero GPU licensing cost** by running Ubuntu Server bare
 
 Follow the documents in order:
 
-1. [Hardware Setup](docs/01-hardware.md)
-2. [Ubuntu Server Installation](docs/02-ubuntu-install.md)
-3. [Display Driver and NVIDIA Setup](docs/03-nvidia-drivers.md)
-4. [CUDA Toolkit](docs/04-cuda-toolkit.md)
-5. [ML Stack — JupyterLab, PyTorch, Ollama](docs/05-ml-stack.md)
-6. [Adding the Tesla M10](docs/06-adding-tesla-m10.md)
+1. [Hardware Setup](01-hardware.md)
+2. [Ubuntu Server Installation](02-ubuntu-install.md)
+3. [Display Driver and NVIDIA Setup](03-nvidia-drivers.md)
+4. [CUDA Toolkit](04-cuda-toolkit.md)
+5. [ML Stack — JupyterLab, PyTorch, Ollama](05-ml-stack.md)
+6. [Adding the Tesla M10](06-adding-tesla-m10.md)
 
 ## Architecture Overview
 
