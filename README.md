@@ -12,7 +12,7 @@ This build prioritises **zero GPU licensing cost** by running Ubuntu Server bare
 |-----------|-------|-------|
 | Workstation | HP Z240 Tower | PCIe Gen3 x16 slot required |
 | CPU | Intel Xeon E3 v5/v6 | ECC memory support |
-| RAM | ≥ 32 GB DDR4 ECC | Recommended for LLM workloads |
+| RAM | DDR4-3200 CL16 SDRAM | 2 * 16 GB |
 | Storage | Kingston 1 TB NVMe | M.2 slot on Z240 motherboard |
 | Display GPU | Asus GT1030 | Headless display adapter; frees M10 for compute |
 | Compute GPU | NVIDIA Tesla M10 | 4× Maxwell GPUs, 32 GB GDDR5, 2 560 CUDA cores |
