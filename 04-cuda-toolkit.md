@@ -59,8 +59,29 @@ Cuda compilation tools, release 12.6
 
 ### Compile and Run the Device Query Example
 
+Retrieve the examples folder from the repository using sparse checkout (avoids cloning the full repo if you only need the examples):
+
+```bash
+git clone --no-checkout --depth 1 \
+    https://github.com/timoruohomaki/theworkstation.git
+cd theworkstation
+git sparse-checkout init --cone
+git sparse-checkout set examples
+git checkout main
+```
+
+Then build and run:
+
 ```bash
 cd examples/device_query
+make
+./device_query
+```
+
+If you have already cloned the full repository, just navigate to the examples folder directly:
+
+```bash
+cd theworkstation/examples/device_query
 make
 ./device_query
 ```
