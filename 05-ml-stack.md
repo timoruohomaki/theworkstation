@@ -7,7 +7,7 @@
 | Component | Pinned version | Reason |
 |-----------|---------------|--------|
 | CUDA Toolkit | 12.6 | Last with full Maxwell library support |
-| PyTorch | 2.8 + cu126 | Last build series with sm_50/sm_52 wheels |
+| PyTorch | cu126 build | Last build series with sm_50 (Maxwell) wheels |
 | Ollama | latest | Builds against system CUDA; fine with 12.6 |
 
 ---
@@ -20,7 +20,7 @@ Ubuntu 24.04 ships Python 3.12. Use virtual environments to isolate project depe
 sudo apt install -y python3-pip python3-venv python3-dev
 ```
 
-Create a base ML environment:
+Create and activate the base ML environment:
 
 ```bash
 python3 -m venv ~/envs/ml
@@ -28,11 +28,17 @@ source ~/envs/ml/bin/activate
 pip install --upgrade pip wheel setuptools
 ```
 
+> **All remaining steps in this document assume the `ml` environment is active.** Your prompt will show `(ml)` when it is. If you open a new shell session, reactivate before running any `pip`, `python3`, or `jupyter` commands:
+> ```bash
+> source ~/envs/ml/bin/activate
+> ```
+> Ollama is the only exception — it installs as a system service and does not use the venv.
+
 ---
 
 ## PyTorch with CUDA 12.6
 
-Install the PyTorch build targeting CUDA 12.6, which still includes sm_50 and sm_52 wheels:
+Install the PyTorch build targeting CUDA 12.6, which includes sm_50 (Maxwell) wheels:
 
 ```bash
 pip install torch torchvision torchaudio \
@@ -54,7 +60,15 @@ for i in range(torch.cuda.device_count()):
 "
 ```
 
-The `get_arch_list()` output must include `sm_52` — if it does not, the installed wheel does not support the M10.
+The `get_arch_list()` output must include `sm_50`. PyTorch compiles one set of Maxwell kernels targeting sm_50 — these run on any compute capability 5.x device, including the M10's sm_52, via binary compatibility within the same major architecture. A separate sm_52 entry will not appear and is not required.
+
+Expected output with K2200:
+```
+PyTorch: 2.x.x+cu126
+CUDA available: True
+Architectures: ['sm_50', 'sm_60', 'sm_70', 'sm_75', 'sm_80', 'sm_86', 'sm_90']
+  GPU 0: Quadro K2200
+```
 
 ---
 
@@ -78,7 +92,7 @@ Set a password:
 jupyter lab password
 ```
 
-Create a systemd service so JupyterLab starts on boot:
+Create a systemd service so JupyterLab starts on boot. The `ExecStart` path points directly into the venv so the service runs with the correct Python and packages regardless of the user's active shell environment:
 
 ```bash
 sudo nano /etc/systemd/system/jupyterlab.service
@@ -113,7 +127,7 @@ Access JupyterLab from any machine on your LAN at `http://WORKSTATION_IP:8888`.
 
 ## Ollama (LLM Serving)
 
-Ollama uses llama.cpp as its backend and auto-detects CUDA GPUs. It compiles against the system CUDA toolkit at install time, so it works correctly as long as CUDA 12.6 is installed.
+Ollama is installed as a system-level service and does **not** use the `ml` venv. It compiles against the system CUDA toolkit at install time, so it works correctly as long as CUDA 12.6 is installed. Run the following from a normal shell (venv active or not):
 
 ```bash
 curl -fsSL https://ollama.com/install.sh | sh
@@ -142,6 +156,8 @@ The Ollama API is available at `http://WORKSTATION_IP:11434` for use with Open W
 ---
 
 ## Optional: Open WebUI (Chat Interface)
+
+Open WebUI runs in Docker and does not use the `ml` venv. Run from a normal shell:
 
 ```bash
 docker run -d \
