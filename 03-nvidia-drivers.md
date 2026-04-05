@@ -1,10 +1,10 @@
 # 03 — Display Driver and NVIDIA Setup
 
-At this stage only the **GT1030** is installed. The Tesla M10 is added in [06-adding-tesla-m10.md](06-adding-tesla-m10.md).
+At this stage only the **Quadro K2200** is installed. The Tesla M10 is added in [06-adding-tesla-m10.md](06-adding-tesla-m10.md).
 
 ## Install NVIDIA Driver
 
-Use Ubuntu's package manager for the recommended production driver. Driver 535.x supports both Pascal (GT1030) and Maxwell (Tesla M10).
+Use Ubuntu's package manager for the recommended production driver. Driver 535.x supports both Maxwell generations — Quadro K2200 (sm_50) and Tesla M10 (sm_52).
 
 ```bash
 sudo apt install -y ubuntu-drivers-common
@@ -15,7 +15,7 @@ sudo reboot
 
 ---
 
-## Verify GT1030 is Detected
+## Verify K2200 is Detected
 
 After reboot:
 
@@ -23,14 +23,14 @@ After reboot:
 nvidia-smi
 ```
 
-Expected output (GT1030 only at this stage):
+Expected output (K2200 only at this stage):
 
 ```
 +-----------------------------------------------------------------------------+
 | NVIDIA-SMI 535.x    Driver Version: 535.x    CUDA Version: 12.x            |
 |-------------------------------+----------------------+----------------------+
 | GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
-|   0  NVIDIA GeForce GT 1030  |  00000000:01:00.0 On |                  N/A |
+|   0  Quadro K2200            |  00000000:01:00.0 On |                  N/A |
 +-----------------------------------------------------------------------------+
 ```
 
@@ -66,7 +66,7 @@ sudo systemctl enable --now nvidia-persistenced
 
 ## Configure X11 for Headless Operation
 
-The GT1030 drives the display but the server runs headless for day-to-day use. Install a minimal display server so CUDA context creation works correctly with the GT1030 as primary:
+The K2200 drives the display but the server runs headless for day-to-day use. Install a minimal display server so CUDA context creation works correctly with the K2200 as primary:
 
 ```bash
 sudo apt install -y xorg
@@ -78,9 +78,9 @@ Generate a base config:
 sudo nvidia-xconfig --no-composite --allow-empty-initial-configuration
 ```
 
-This creates `/etc/X11/xorg.conf` but typically without a `BusID` entry. Add it manually so X11 binds to the GT1030 specifically, not whichever GPU it enumerates first.
+This creates `/etc/X11/xorg.conf` but typically without a `BusID` entry. Add it manually so X11 binds to the K2200 specifically, not whichever GPU it enumerates first.
 
-Find the GT1030 PCI address:
+Find the K2200 PCI address:
 
 ```bash
 lspci | grep -i nvidia
@@ -88,11 +88,11 @@ lspci | grep -i nvidia
 
 Example output:
 ```
-01:00.0 VGA compatible controller: NVIDIA Corporation GP108 [GeForce GT 1030]
+01:00.0 VGA compatible controller: NVIDIA Corporation GM107GL [Quadro K2200]
 02:00.0 3D controller: NVIDIA Corporation GM204GL [Tesla M10]
 ```
 
-The GT1030 address here is `01:00.0`. Convert it to xorg format (`PCI:1:0:0`) and insert it into the `Device` section of `/etc/X11/xorg.conf`:
+The K2200 address here is `01:00.0`. Convert it to xorg format (`PCI:1:0:0`) and insert it into the `Device` section of `/etc/X11/xorg.conf`:
 
 ```bash
 sudo nano /etc/X11/xorg.conf
@@ -107,7 +107,7 @@ Section "Device"
 EndSection
 ```
 
-Replace `PCI:1:0:0` with the value matching your GT1030's address — the format converts `BB:DD.F` from `lspci` to `PCI:BB:DD:F`.
+Replace `PCI:1:0:0` with the value matching your K2200's address — the format converts `BB:DD.F` from `lspci` to `PCI:BB:DD:F`.
 
 ---
 

@@ -38,13 +38,19 @@ Follow the documents in order:
 5. [ML Stack — JupyterLab, PyTorch, Ollama](05-ml-stack.md)
 6. [Adding the Tesla M10](06-adding-tesla-m10.md)
 
+## Examples
+
+| Example | Description |
+|---------|-------------|
+| [examples/device_query](examples/device_query) | CUDA device enumeration — verifies GPU detection and prints compute capability, VRAM, and ECC status |
+
 ## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────┐
 │  HP Z240 Tower — Ubuntu Server 24.04 LTS            │
 │                                                     │
-│  GT1030 ──► Display output (PCIe x4 slot)          │
+│  Quadro K2200 ──► Display output (PCIe x4 slot)    │
 │                                                     │
 │  Tesla M10 ──► 4× CUDA devices (PCIe x16 slot)     │
 │    ├── GPU 0  640 cores  8 GB VRAM                  │

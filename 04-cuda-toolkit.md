@@ -48,41 +48,55 @@ Built on ...
 Cuda compilation tools, release 12.x
 ```
 
-### Compile and Run the CUDA Sample
+### Compile and Run the Device Query Example
+
+The `cuda-samples` apt package no longer exists in the NVIDIA repository. Use the device query example from this repo instead:
 
 ```bash
-# Install sample programs
-sudo apt install -y cuda-samples-12-6
-
-cd /usr/local/cuda/samples/1_Utilities/deviceQuery
-sudo make
-./deviceQuery
+cd examples/device_query
+make
+./device_query
 ```
 
-With GT1030 installed, expected output includes:
+With the Quadro K2200 installed, expected output:
 ```
-Device 0: "NVIDIA GeForce GT 1030"
-  CUDA Capability Major/Minor version number: 6.1
+CUDA devices found: 1
+
+GPU 0: Quadro K2200
+  Compute capability : sm_50
+  Total VRAM         : 4096 MB
+  Multiprocessors    : 5
+  Clock rate         : 1124 MHz
+  ECC enabled        : no
+```
+
+After adding the Tesla M10, you will see four additional devices:
+```
+CUDA devices found: 5
+
+GPU 0: Quadro K2200
+  Compute capability : sm_50
+  Total VRAM         : 4096 MB
   ...
-Result = PASS
-```
-
-After adding the Tesla M10, you will see four additional devices each reporting:
-```
-CUDA Capability Major/Minor version number: 5.2
+GPU 1: Tesla M10
+  Compute capability : sm_52
+  Total VRAM         : 8192 MB
+  ECC enabled        : yes
+...
 ```
 
 ---
 
-## Maxwell Architecture Note (sm_52)
+## Maxwell Architecture Note
 
-The Tesla M10 is a **Maxwell** GPU (compute capability 5.2). CUDA 12.x still compiles for sm_52, but you must specify it explicitly when building code:
+Both the Quadro K2200 (sm_50) and the Tesla M10 (sm_52) are **Maxwell** GPUs, so the same driver generation covers the entire system. CUDA 12.x compiles for both, but you must specify the architecture explicitly when building code:
 
 ```bash
-nvcc -arch=sm_52 -o my_program my_program.cu
+nvcc -arch=sm_52 -o my_program my_program.cu   # target M10
+nvcc -arch=sm_50 -o my_program my_program.cu   # target K2200
 ```
 
-For Python/PyTorch workloads this is handled automatically, but see [05-ml-stack.md](05-ml-stack.md) for framework-specific version pins.
+The `device_query` Makefile compiles for both sm_50 and sm_52 in one binary. For Python/PyTorch workloads this is handled automatically — see [05-ml-stack.md](05-ml-stack.md) for framework-specific version pins.
 
 ---
 
