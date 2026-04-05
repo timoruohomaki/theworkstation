@@ -11,7 +11,7 @@ This build prioritises **zero GPU licensing cost** by running Ubuntu Server bare
 | Component | Model | Notes |
 |-----------|-------|-------|
 | Workstation | HP Z240 Tower | PCIe Gen3 x16 slot required |
-| CPU | Intel Xeon E3 v5/v6 | ECC memory support |
+| CPU | Intel Xeon E3-1230 v5 @ 3.40 GHz | ECC memory support |
 | RAM | DDR4-3200 CL16 SDRAM | 2 * 16 GB |
 | Storage | Kingston 1000G NV3 M.2 2280 PCIe 4.0 NVMe SSD | M.2 slot on Z240 motherboard, Up to 6,000MB/s read, 4,000MB/s write |
 | Display GPU | Asus GT1030 | Headless display adapter; frees M10 for compute |
